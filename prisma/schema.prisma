@@ -13,41 +13,30 @@ model User {
   username    String
   image       String?
   videos      Video[]
-  library     Library[]
   memberships Membership[]
   isAdmin     Boolean      @default(false)
   updatedAt   DateTime     @updatedAt
   createdAt   DateTime     @default(now())
 }
 
-model Library {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id])
-  videos    Video[]
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
 model Video {
-  id                String       @id @default(cuid())
-  size              Int          @default(0) // Size in megabytes
-  length            Float        @default(0)
-  views             Int          @default(0)
-  progress          Float        @default(0)
-  width             Int          @default(0)
-  height            Int          @default(0)
-  framerate         Int          @default(0)
-  thumbnailFilename String       @default("")
-  title             String       @default("New upload")
-  status            MediaStatus  @default(CREATED)
+  id                String      @id @default(cuid())
+  size              Int         @default(0) // Size in megabytes
+  length            Float       @default(0)
+  views             Int         @default(0)
+  progress          Float       @default(0)
+  width             Int         @default(0)
+  height            Int         @default(0)
+  framerate         Int         @default(0)
+  thumbnailFilename String      @default("")
+  title             String      @default("New upload")
+  status            VideoStatus @default(CREATED)
   userId            String
-  user              User         @relation(fields: [userId], references: [id])
-  libraryId         String
-  library           Library      @relation(fields: [libraryId], references: [id])
-  updatedAt         DateTime     @updatedAt
-  createdAt         DateTime     @default(now())
-  pods              VideoOnPod[]
+  user              User        @relation(fields: [userId], references: [id])
+  podId             String
+  pod               Pod         @relation(fields: [podId], references: [id])
+  updatedAt         DateTime    @updatedAt
+  createdAt         DateTime    @default(now())
 }
 
 model Membership {
@@ -64,24 +53,10 @@ model Membership {
 model Pod {
   id          String       @id @default(cuid())
   name        String       @default("New Pod")
-  image       String?
-  videos      VideoOnPod[]
+  videos      Video[]
   memberships Membership[]
   updatedAt   DateTime     @updatedAt
   createdAt   DateTime     @default(now())
-}
-
-model VideoOnPod {
-  id      Int    @id @default(autoincrement())
-  videoId String
-  video   Video  @relation(fields: [videoId], references: [id])
-  podId   String
-  pod     Pod    @relation(fields: [podId], references: [id])
-
-  // unique reference to an item shared to a pod
-  // Could add things here like is the item highlighted
-
-  @@unique([podId, videoId])
 }
 
 enum PodRole {
@@ -89,9 +64,9 @@ enum PodRole {
   MEMBER
 }
 
-enum MediaStatus {
-  CREATED
-  PROCESSING
+enum VideoStatus {
   READY
   ERROR
+  CREATED
+  PROCESSING
 }
