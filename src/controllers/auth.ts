@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt'
 import db from '../config/db'
 import { getToken } from '../config/utils'
 
@@ -19,12 +18,6 @@ export async function loginGoogleSso(req, res) {
     where: { email: email },
     update: { username: name, image: picture },
     create: { username: name, email, image: picture },
-  })
-
-  await db.library.upsert({
-    where: { userId: user.id },
-    update: {},
-    create: { userId: user.id },
   })
 
   return res.json({

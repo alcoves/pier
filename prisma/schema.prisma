@@ -7,12 +7,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+//
+
 model User {
   id          String       @id @default(cuid())
   email       String       @unique
   username    String
   image       String?
   videos      Video[]
+  shares      VideoShare[]
   memberships Membership[]
   isAdmin     Boolean      @default(false)
   updatedAt   DateTime     @updatedAt
@@ -20,53 +23,84 @@ model User {
 }
 
 model Video {
-  id                String      @id @default(cuid())
-  size              Int         @default(0) // Size in megabytes
-  length            Float       @default(0)
-  views             Int         @default(0)
-  progress          Float       @default(0)
-  width             Int         @default(0)
-  height            Int         @default(0)
-  framerate         Int         @default(0)
-  thumbnailFilename String      @default("")
-  title             String      @default("New upload")
-  status            VideoStatus @default(CREATED)
+  id                String       @id @default(cuid())
+  size              Int          @default(0) // Size in megabytes
+  length            Float        @default(0)
+  views             Int          @default(0)
+  progress          Float        @default(0)
+  width             Int          @default(0)
+  height            Int          @default(0)
+  framerate         Int          @default(0)
+  thumbnailFilename String       @default("")
+  title             String       @default("")
+  status            VideoStatus  @default(CREATED)
+  shares            VideoShare[]
   userId            String
-  user              User        @relation(fields: [userId], references: [id])
+  user              User         @relation(fields: [userId], references: [id])
   podId             String
-  pod               Pod         @relation(fields: [podId], references: [id])
-  updatedAt         DateTime    @updatedAt
-  createdAt         DateTime    @default(now())
+  updatedAt         DateTime     @updatedAt
+  createdAt         DateTime     @default(now())
+}
+
+model VideoShare {
+  id        String           @id @default(cuid())
+  status    VideoShareStatus @default(APPROVED)
+  videoId   String
+  video     Video            @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  podId     String
+  pod       Pod              @relation(fields: [podId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  updatedAt DateTime         @updatedAt
+  createdAt DateTime         @default(now())
 }
 
 model Membership {
-  id        String   @id @default(cuid())
-  role      PodRole  @default(MEMBER)
+  id        String           @id @default(cuid())
+  role      PodRole          @default(VIEWER)
+  status    MembershipStatus @default(PENDING)
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   podId     String
-  pod       Pod      @relation(fields: [podId], references: [id], onDelete: Cascade)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  pod       Pod              @relation(fields: [podId], references: [id], onDelete: Cascade)
+  updatedAt DateTime         @updatedAt
+  createdAt DateTime         @default(now())
 }
 
 model Pod {
   id          String       @id @default(cuid())
   name        String       @default("New Pod")
-  videos      Video[]
+  inviteCode  String       @unique @default(cuid())
+  videos      VideoShare[]
   memberships Membership[]
   updatedAt   DateTime     @updatedAt
   createdAt   DateTime     @default(now())
 }
 
+enum VideoShareStatus {
+  PENDING
+  APPROVED
+}
+
+enum MembershipStatus {
+  PENDING
+  APPROVED
+}
+
 enum PodRole {
   OWNER
+  ADMIN
   MEMBER
+  EDITOR
+  VIEWER
+  CONTRIBUTOR
 }
 
 enum VideoStatus {
   READY
   ERROR
   CREATED
+  UPLOADED
+  UPLOADING
   PROCESSING
 }

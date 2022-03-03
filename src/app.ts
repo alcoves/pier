@@ -7,7 +7,6 @@ import userRoutes from './routes/users'
 import authRoutes from './routes/auth'
 import adminRoutes from './routes/admin'
 import webhookRoutes from './routes/webhooks'
-import libraryRoutes from './routes/libraries'
 
 const app = express()
 
@@ -21,6 +20,5 @@ app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
 app.use('/admin', adminRoutes)
 app.use('/webhooks', webhookRoutes)
-app.use('/libraries', libraryRoutes)
 
 export default app
