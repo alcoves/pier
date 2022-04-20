@@ -2583,10 +2583,10 @@ globby@^11.0.4:
     merge2 "^1.4.1"
     slash "^3.0.0"
 
-google-auth-library@^7.14.1:
-  version "7.14.1"
-  resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-7.14.1.tgz#e3483034162f24cc71b95c8a55a210008826213c"
-  integrity sha512-5Rk7iLNDFhFeBYc3s8l1CqzbEBcdhwR193RlD4vSNFajIcINKI8W8P0JLmBpwymHqqWbX34pJDQu39cSy/6RsA==
+google-auth-library@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-8.0.0.tgz#01d2d5eeb471c452f98205e01043f9e905c99d38"
+  integrity sha512-8wjVx5mUXw0Bzn49ibY7wTlZV4EwVATsTRBCr15314mX89MwSKzFIsMz63fTA5iNxe4Xx/QEkH+HR5ZPxneB7Q==
   dependencies:
     arrify "^2.0.0"
     base64-js "^1.3.0"
@@ -2594,7 +2594,7 @@ google-auth-library@^7.14.1:
     fast-text-encoding "^1.0.0"
     gaxios "^4.0.0"
     gcp-metadata "^4.2.0"
-    gtoken "^5.0.4"
+    gtoken "^5.3.2"
     jws "^4.0.0"
     lru-cache "^6.0.0"
 
@@ -2627,7 +2627,7 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.9:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
 
-gtoken@^5.0.4:
+gtoken@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/gtoken/-/gtoken-5.3.2.tgz#deb7dc876abe002178e0515e383382ea9446d58f"
   integrity sha512-gkvEKREW7dXWF8NV8pVrKfW7WqReAmjjkMBh6lNCCGOM4ucS0r0YyXXl0r/9Yj8wcW/32ISkfc8h5mPTDbtifQ==
