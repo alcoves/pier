@@ -16,7 +16,7 @@
   "dependencies": {
     "@prisma/client": "^4.0.0",
     "@socket.io/redis-adapter": "^7.2.0",
-    "aws-sdk": "^2.1174.0",
+    "aws-sdk": "^2.1183.0",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "cuid": "^2.1.8",
