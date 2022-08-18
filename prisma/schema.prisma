@@ -7,15 +7,30 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum MediaStatus {
+  READY
+  ERROR
+  CREATED
+  UPLOADED
+  UPLOADING
+  PROCESSING
+}
+
+enum PodRole {
+  OWNER
+  MEMBER
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String     @id @default(cuid())
+  email     String     @unique
   username  String
   image     String?
+  pods      PodUsers[]
   videos    Video[]
-  isAdmin   Boolean  @default(false)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  isAdmin   Boolean    @default(false)
+  updatedAt DateTime   @updatedAt
+  createdAt DateTime   @default(now())
 }
 
 model Video {
@@ -38,15 +53,25 @@ model Video {
   updatedAt    DateTime    @updatedAt
   metadata     Json?
   createdAt    DateTime    @default(now())
+  pods         Pod[]
 
   @@unique([id, createdAt])
 }
 
-enum MediaStatus {
-  READY
-  ERROR
-  CREATED
-  UPLOADED
-  UPLOADING
-  PROCESSING
+model PodUsers {
+  user   User    @relation(fields: [userId], references: [id])
+  userId String
+  pod    Pod     @relation(fields: [podId], references: [id], onDelete: Cascade)
+  podId  String
+  role   PodRole
+
+  @@unique([userId, podId])
+}
+
+model Pod {
+  id              String     @id @default(cuid())
+  name            String     @default("New Pod")
+  isCollaborative Boolean    @default(false)
+  users           PodUsers[]
+  videos          Video[]
 }

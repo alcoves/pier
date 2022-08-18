@@ -1,19 +1,24 @@
 import db from '../config/db'
 
 export async function createPod(req, res) {
-  const pod = await db.pod.create({ data: {} })
-  await db.usersOnPods.create({
+  const pod = await db.pod.create({
     data: {
-      role: 'OWNER',
-      podId: pod.id,
-      userId: req.user.id,
+      users: {
+        create: [
+          {
+            role: 'OWNER',
+            userId: req.user.id,
+          },
+        ],
+      },
     },
   })
+
   return res.json({ pod })
 }
 
 export async function getPod(req, res) {
-  const pod = await db.pod.findMany({
+  const pods = await db.pod.findMany({
     where: {
       id: req.params.podId,
       users: {
@@ -27,8 +32,8 @@ export async function getPod(req, res) {
     },
   })
 
-  if (!pod) return res.sendStatus(404)
-  return res.json({ pod })
+  if (!pods.length) return res.sendStatus(404)
+  return res.json({ pod: pods[0] })
 }
 
 export async function listPods(req, res) {
@@ -90,9 +95,13 @@ export async function deletePod(req, res) {
 
   if (!podCheck.length) return res.sendStatus(400)
 
-  await db.usersOnPods.deleteMany({ where: { podId } })
-  await db.videosOnPods.deleteMany({ where: { podId } })
-  await db.pod.delete({ where: { id: podId } })
+  await db.pod.delete({
+    where: { id: podId },
+    include: {
+      users: true,
+      videos: true,
+    },
+  })
 
   return res.sendStatus(200)
 }
