@@ -5,6 +5,8 @@ import {
   createPod,
   updatePod,
   deletePod,
+  addPodVideos,
+  removePodVideos,
   // addPodUsers,
   // addPodVideos,
   // listPodVideos,
@@ -24,14 +26,8 @@ router.delete('/:podId', auth, deletePod)
 
 // video routes
 
-// router.get('/:podId/videos', listPodVideos)
-// // gets the videos on a pod
-
-// router.post('/:podId/videos', addPodVideos)
-// // takes videoIds, checks that the requesting user owns the videos and that pod isShareable otherwise
-
-// router.delete('/:podId/videos', removePodVideos)
-// // takes videoIds, checks that the users own the videos, bypasses isSharable
+router.post('/:podId/videos', auth, addPodVideos)
+router.delete('/:podId/videos', auth, removePodVideos)
 
 // // user routes
 

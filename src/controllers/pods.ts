@@ -18,22 +18,25 @@ export async function createPod(req, res) {
 }
 
 export async function getPod(req, res) {
-  const pods = await db.pod.findMany({
+  const pod = await db.pod.findUnique({
     where: {
       id: req.params.podId,
-      users: {
-        some: {
-          userId: req.user.id,
-          AND: {
-            role: 'OWNER',
-          },
-        },
-      },
+    },
+    include: {
+      users: true,
+      videos: true,
     },
   })
 
-  if (!pods.length) return res.sendStatus(404)
-  return res.json({ pod: pods[0] })
+  const userIds = pod?.users.map(({ userId }) => {
+    return userId
+  })
+
+  if (userIds?.includes(req.user.id)) {
+    return res.json({ pod })
+  }
+
+  return res.sendStatus(400)
 }
 
 export async function listPods(req, res) {
@@ -107,5 +110,48 @@ export async function deletePod(req, res) {
 }
 
 // video controllers
+
+export async function addPodVideos(req, res) {
+  const { podId } = req.params
+  const { ids: videoIds } = req.body
+  const mappedIds = videoIds.map(id => {
+    return { id }
+  })
+
+  // TODO :: enforce that pod isSharable
+  // TODO :: enforce that user owns the content
+
+  await db.pod.update({
+    where: { id: podId },
+    data: {
+      videos: {
+        connect: mappedIds,
+      },
+    },
+  })
+
+  return res.sendStatus(200)
+}
+
+export async function removePodVideos(req, res) {
+  const { podId } = req.params
+  const { ids: videoIds } = req.body
+  const mappedIds = videoIds.map(id => {
+    return { id }
+  })
+
+  // TODO :: enforce that user owns the content
+
+  await db.pod.update({
+    where: { id: podId },
+    data: {
+      videos: {
+        disconnect: mappedIds,
+      },
+    },
+  })
+
+  return res.sendStatus(200)
+}
 
 // user controllers
